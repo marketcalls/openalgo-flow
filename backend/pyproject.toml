@@ -1,0 +1,20 @@
+[project]
+name = "openalgo-flow-backend"
+version = "1.0.0"
+description = "Visual workflow editor for OpenAlgo trading automation"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy>=2.0.36",
+    "aiosqlite>=0.20.0",
+    "apscheduler>=3.10.4",
+    "httpx>=0.28.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "websockets>=14.0",
+    "python-multipart>=0.0.18",
+]
+
+[dependency-groups]
+dev = []

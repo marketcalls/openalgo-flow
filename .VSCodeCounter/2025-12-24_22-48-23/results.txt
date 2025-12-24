@@ -1,0 +1,75 @@
+Date : 2025-12-24 22:48:23
+Directory : d:\openalgo-flow\frontend
+Total : 34 files,  2757 codes, 50 comments, 332 blanks, all 3139 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |         20 |      1,701 |          0 |        153 |      1,854 |
+| TypeScript         |          8 |        587 |         22 |        102 |        711 |
+| PostCSS            |          1 |        294 |         24 |         72 |        390 |
+| JavaScript         |          2 |         87 |          4 |          2 |         93 |
+| JSON               |          1 |         50 |          0 |          1 |         51 |
+| JSON with Comments |          1 |         25 |          0 |          1 |         26 |
+| HTML               |          1 |         13 |          0 |          1 |         14 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                          | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                             |         34 |      2,757 |         50 |        332 |      3,139 |
+| . (Files)                                                     |          6 |        199 |          4 |          7 |        210 |
+| src                                                           |         28 |      2,558 |         46 |        325 |      2,929 |
+| src (Files)                                                   |          2 |        317 |         24 |         75 |        416 |
+| src\components                                                |         17 |      1,163 |          0 |        120 |      1,283 |
+| src\components\layout                                         |          2 |         74 |          0 |          8 |         82 |
+| src\components\ui                                             |         15 |      1,089 |          0 |        112 |      1,201 |
+| src\hooks                                                     |          1 |        156 |          0 |         30 |        186 |
+| src\lib                                                       |          3 |        236 |         14 |         37 |        287 |
+| src\pages                                                     |          2 |        515 |          0 |         30 |        545 |
+| src\stores                                                    |          2 |        131 |          1 |         25 |        157 |
+| src\types                                                     |          1 |         40 |          7 |          8 |         55 |
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                      | language           | code       | comment    | blank      | total      |
++---------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| d:\openalgo-flow\frontend\index.html                          | HTML               |         13 |          0 |          1 |         14 |
+| d:\openalgo-flow\frontend\package.json                        | JSON               |         50 |          0 |          1 |         51 |
+| d:\openalgo-flow\frontend\postcss.config.js                   | JavaScript         |          6 |          0 |          1 |          7 |
+| d:\openalgo-flow\frontend\src\components\layout\Header.tsx    | TypeScript JSX     |         60 |          0 |          6 |         66 |
+| d:\openalgo-flow\frontend\src\components\layout\Layout.tsx    | TypeScript JSX     |         14 |          0 |          2 |         16 |
+| d:\openalgo-flow\frontend\src\components\ui\alert-dialog.tsx  | TypeScript JSX     |        134 |          0 |         13 |        147 |
+| d:\openalgo-flow\frontend\src\components\ui\button.tsx        | TypeScript JSX     |         58 |          0 |          5 |         63 |
+| d:\openalgo-flow\frontend\src\components\ui\card.tsx          | TypeScript JSX     |         73 |          0 |          8 |         81 |
+| d:\openalgo-flow\frontend\src\components\ui\dialog.tsx        | TypeScript JSX     |        116 |          0 |         12 |        128 |
+| d:\openalgo-flow\frontend\src\components\ui\dropdown-menu.tsx | TypeScript JSX     |        182 |          0 |         17 |        199 |
+| d:\openalgo-flow\frontend\src\components\ui\input.tsx         | TypeScript JSX     |         26 |          0 |          4 |         30 |
+| d:\openalgo-flow\frontend\src\components\ui\label.tsx         | TypeScript JSX     |         20 |          0 |          4 |         24 |
+| d:\openalgo-flow\frontend\src\components\ui\scroll-area.tsx   | TypeScript JSX     |         42 |          0 |          4 |         46 |
+| d:\openalgo-flow\frontend\src\components\ui\select.tsx        | TypeScript JSX     |        157 |          0 |         12 |        169 |
+| d:\openalgo-flow\frontend\src\components\ui\separator.tsx     | TypeScript JSX     |         26 |          0 |          3 |         29 |
+| d:\openalgo-flow\frontend\src\components\ui\switch.tsx        | TypeScript JSX     |         28 |          0 |          3 |         31 |
+| d:\openalgo-flow\frontend\src\components\ui\tabs.tsx          | TypeScript JSX     |         51 |          0 |          6 |         57 |
+| d:\openalgo-flow\frontend\src\components\ui\toast.tsx         | TypeScript JSX     |        117 |          0 |         12 |        129 |
+| d:\openalgo-flow\frontend\src\components\ui\toaster.tsx       | TypeScript JSX     |         31 |          0 |          3 |         34 |
+| d:\openalgo-flow\frontend\src\components\ui\tooltip.tsx       | TypeScript JSX     |         28 |          0 |          6 |         34 |
+| d:\openalgo-flow\frontend\src\hooks\use-toast.ts              | TypeScript         |        156 |          0 |         30 |        186 |
+| d:\openalgo-flow\frontend\src\index.css                       | PostCSS            |        294 |         24 |         72 |        390 |
+| d:\openalgo-flow\frontend\src\lib\api.ts                      | TypeScript         |        158 |          3 |         24 |        185 |
+| d:\openalgo-flow\frontend\src\lib\constants.ts                | TypeScript         |         73 |         11 |         11 |         95 |
+| d:\openalgo-flow\frontend\src\lib\utils.ts                    | TypeScript         |          5 |          0 |          2 |          7 |
+| d:\openalgo-flow\frontend\src\main.tsx                        | TypeScript JSX     |         23 |          0 |          3 |         26 |
+| d:\openalgo-flow\frontend\src\pages\Dashboard.tsx             | TypeScript JSX     |        286 |          0 |         15 |        301 |
+| d:\openalgo-flow\frontend\src\pages\Settings.tsx              | TypeScript JSX     |        229 |          0 |         15 |        244 |
+| d:\openalgo-flow\frontend\src\stores\settingsStore.ts         | TypeScript         |         27 |          0 |          6 |         33 |
+| d:\openalgo-flow\frontend\src\stores\workflowStore.ts         | TypeScript         |        104 |          1 |         19 |        124 |
+| d:\openalgo-flow\frontend\src\types\index.ts                  | TypeScript         |         40 |          7 |          8 |         55 |
+| d:\openalgo-flow\frontend\tailwind.config.js                  | JavaScript         |         81 |          4 |          1 |         86 |
+| d:\openalgo-flow\frontend\tsconfig.json                       | JSON with Comments |         25 |          0 |          1 |         26 |
+| d:\openalgo-flow\frontend\vite.config.ts                      | TypeScript         |         24 |          0 |          2 |         26 |
+| Total                                                         |                    |      2,757 |         50 |        332 |      3,139 |
++---------------------------------------------------------------+--------------------+------------+------------+------------+------------+

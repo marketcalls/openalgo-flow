@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn/ui Neutral Dark Theme */
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+
+    --radius: 0.5rem;
+
+    /* Trading Colors */
+    --buy: 142 76% 36%;
+    --buy-foreground: 0 0% 98%;
+    --sell: 0 84% 60%;
+    --sell-foreground: 0 0% 98%;
+
+    /* Node Colors */
+    --node-trigger: 38 92% 50%;
+    --node-action: 217 91% 60%;
+    --node-condition: 270 60% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer components {
+  /* Monospace data display */
+  .mono-data {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    @apply tracking-tight tabular-nums;
+  }
+
+  /* Buy/Sell badges */
+  .badge-buy {
+    @apply bg-[hsl(var(--buy))]/15 text-[hsl(142_76%_46%)] border border-[hsl(var(--buy))]/30 rounded-md px-2 py-0.5 text-xs font-medium;
+  }
+
+  .badge-sell {
+    @apply bg-[hsl(var(--sell))]/15 text-[hsl(0_84%_70%)] border border-[hsl(var(--sell))]/30 rounded-md px-2 py-0.5 text-xs font-medium;
+  }
+
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-dot.active {
+    @apply bg-[hsl(var(--buy))];
+  }
+
+  .status-dot.inactive {
+    @apply bg-muted-foreground/50;
+  }
+
+  .status-dot.running {
+    @apply bg-[hsl(var(--node-trigger))];
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .status-dot.error {
+    @apply bg-[hsl(var(--sell))];
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ReactFlow Styles */
+.react-flow__background {
+  background-color: hsl(var(--background)) !important;
+}
+
+.react-flow__node {
+  @apply shadow-none;
+}
+
+.react-flow__node.selected {
+  @apply ring-0;
+}
+
+.react-flow__handle {
+  @apply w-3 h-3 border-2;
+  background: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--background)) !important;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.2);
+}
+
+.react-flow__edge-path {
+  stroke: hsl(var(--muted-foreground)) !important;
+  stroke-width: 2px;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: hsl(var(--foreground)) !important;
+}
+
+.react-flow__controls {
+  @apply rounded-lg overflow-hidden border border-border;
+  background: hsl(var(--card)) !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.react-flow__controls-button {
+  @apply border-0 border-b border-border;
+  background: transparent !important;
+  fill: hsl(var(--foreground)) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: hsl(var(--accent)) !important;
+}
+
+.react-flow__controls-button:last-child {
+  @apply border-b-0;
+}
+
+.react-flow__minimap {
+  @apply rounded-lg overflow-hidden border border-border;
+  background: hsl(var(--card)) !important;
+}
+
+.react-flow__minimap-mask {
+  fill: hsl(var(--background) / 0.9) !important;
+}
+
+.react-flow__minimap-node {
+  fill: hsl(var(--muted-foreground)) !important;
+  stroke: none !important;
+}
+
+/* Custom Node Styles */
+.workflow-node {
+  @apply rounded-lg border border-border bg-card transition-all duration-150;
+}
+
+.workflow-node:hover {
+  @apply border-muted-foreground/50;
+}
+
+.workflow-node.selected {
+  @apply border-foreground;
+}
+
+/* Node type indicators */
+.node-start {
+  @apply border-l-2;
+  border-left-color: hsl(var(--node-trigger));
+}
+
+.node-action {
+  @apply border-l-2;
+  border-left-color: hsl(var(--node-action));
+}
+
+.node-condition {
+  @apply border-l-2;
+  border-left-color: hsl(var(--node-condition));
+}
+
+.node-icon {
+  @apply flex h-8 w-8 items-center justify-center rounded-md;
+}
+
+.node-start .node-icon {
+  @apply bg-[hsl(var(--node-trigger))]/10 text-[hsl(var(--node-trigger))];
+}
+
+.node-action .node-icon {
+  @apply bg-[hsl(var(--node-action))]/10 text-[hsl(var(--node-action))];
+}
+
+.node-condition .node-icon {
+  @apply bg-[hsl(var(--node-condition))]/10 text-[hsl(var(--node-condition))];
+}

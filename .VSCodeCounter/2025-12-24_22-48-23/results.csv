@@ -1,0 +1,36 @@
+"filename", "language", "JSON with Comments", "JavaScript", "TypeScript", "JSON", "PostCSS", "TypeScript JSX", "HTML", "comment", "blank", "total"
+"d:\openalgo-flow\frontend\index.html", "HTML", 0, 0, 0, 0, 0, 0, 13, 0, 1, 14
+"d:\openalgo-flow\frontend\package.json", "JSON", 0, 0, 0, 50, 0, 0, 0, 0, 1, 51
+"d:\openalgo-flow\frontend\postcss.config.js", "JavaScript", 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+"d:\openalgo-flow\frontend\src\components\layout\Header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 60, 0, 0, 6, 66
+"d:\openalgo-flow\frontend\src\components\layout\Layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 14, 0, 0, 2, 16
+"d:\openalgo-flow\frontend\src\components\ui\alert-dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 134, 0, 0, 13, 147
+"d:\openalgo-flow\frontend\src\components\ui\button.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 58, 0, 0, 5, 63
+"d:\openalgo-flow\frontend\src\components\ui\card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 73, 0, 0, 8, 81
+"d:\openalgo-flow\frontend\src\components\ui\dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 116, 0, 0, 12, 128
+"d:\openalgo-flow\frontend\src\components\ui\dropdown-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 182, 0, 0, 17, 199
+"d:\openalgo-flow\frontend\src\components\ui\input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 26, 0, 0, 4, 30
+"d:\openalgo-flow\frontend\src\components\ui\label.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 20, 0, 0, 4, 24
+"d:\openalgo-flow\frontend\src\components\ui\scroll-area.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 42, 0, 0, 4, 46
+"d:\openalgo-flow\frontend\src\components\ui\select.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 157, 0, 0, 12, 169
+"d:\openalgo-flow\frontend\src\components\ui\separator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 26, 0, 0, 3, 29
+"d:\openalgo-flow\frontend\src\components\ui\switch.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 28, 0, 0, 3, 31
+"d:\openalgo-flow\frontend\src\components\ui\tabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 51, 0, 0, 6, 57
+"d:\openalgo-flow\frontend\src\components\ui\toast.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 117, 0, 0, 12, 129
+"d:\openalgo-flow\frontend\src\components\ui\toaster.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 31, 0, 0, 3, 34
+"d:\openalgo-flow\frontend\src\components\ui\tooltip.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 28, 0, 0, 6, 34
+"d:\openalgo-flow\frontend\src\hooks\use-toast.ts", "TypeScript", 0, 0, 156, 0, 0, 0, 0, 0, 30, 186
+"d:\openalgo-flow\frontend\src\index.css", "PostCSS", 0, 0, 0, 0, 294, 0, 0, 24, 72, 390
+"d:\openalgo-flow\frontend\src\lib\api.ts", "TypeScript", 0, 0, 158, 0, 0, 0, 0, 3, 24, 185
+"d:\openalgo-flow\frontend\src\lib\constants.ts", "TypeScript", 0, 0, 73, 0, 0, 0, 0, 11, 11, 95
+"d:\openalgo-flow\frontend\src\lib\utils.ts", "TypeScript", 0, 0, 5, 0, 0, 0, 0, 0, 2, 7
+"d:\openalgo-flow\frontend\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 23, 0, 0, 3, 26
+"d:\openalgo-flow\frontend\src\pages\Dashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 286, 0, 0, 15, 301
+"d:\openalgo-flow\frontend\src\pages\Settings.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 229, 0, 0, 15, 244
+"d:\openalgo-flow\frontend\src\stores\settingsStore.ts", "TypeScript", 0, 0, 27, 0, 0, 0, 0, 0, 6, 33
+"d:\openalgo-flow\frontend\src\stores\workflowStore.ts", "TypeScript", 0, 0, 104, 0, 0, 0, 0, 1, 19, 124
+"d:\openalgo-flow\frontend\src\types\index.ts", "TypeScript", 0, 0, 40, 0, 0, 0, 0, 7, 8, 55
+"d:\openalgo-flow\frontend\tailwind.config.js", "JavaScript", 0, 81, 0, 0, 0, 0, 0, 4, 1, 86
+"d:\openalgo-flow\frontend\tsconfig.json", "JSON with Comments", 25, 0, 0, 0, 0, 0, 0, 0, 1, 26
+"d:\openalgo-flow\frontend\vite.config.ts", "TypeScript", 0, 0, 24, 0, 0, 0, 0, 0, 2, 26
+"Total", "-", 25, 87, 587, 50, 294, 1701, 13, 50, 332, 3139
