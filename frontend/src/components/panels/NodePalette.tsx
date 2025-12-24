@@ -232,6 +232,13 @@ export function NodePalette({ onDragStart }: NodePaletteProps) {
       icon: <Calendar className="h-3.5 w-3.5 text-primary" />,
       color: 'bg-primary/10',
     },
+    {
+      type: 'multiQuotes',
+      label: 'Multi Quotes',
+      description: 'Multiple symbols',
+      icon: <BarChart3 className="h-3.5 w-3.5 text-primary" />,
+      color: 'bg-primary/10',
+    },
   ]
 
   const utilities = [

@@ -1002,6 +1002,201 @@ export function ConfigPanel() {
             </>
           )}
 
+          {/* ===== BASKET ORDER NODE ===== */}
+          {nodeType === 'basketOrder' && (
+            <>
+              <div className="space-y-2">
+                <Label>Basket Name</Label>
+                <Input
+                  placeholder="e.g., Morning Portfolio"
+                  value={(nodeData.basketName as string) || ''}
+                  onChange={(e) => handleDataChange('basketName', e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Orders (one per line: SYMBOL,EXCHANGE,ACTION,QTY)</Label>
+                <textarea
+                  className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  placeholder="RELIANCE,NSE,BUY,10&#10;INFY,NSE,BUY,5&#10;SBIN,NSE,SELL,20"
+                  value={(nodeData.orders as string) || ''}
+                  onChange={(e) => handleDataChange('orders', e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Product</Label>
+                <Select
+                  value={(nodeData.product as string) || 'MIS'}
+                  onValueChange={(v) => handleDataChange('product', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRODUCT_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Price Type</Label>
+                <Select
+                  value={(nodeData.priceType as string) || 'MARKET'}
+                  onValueChange={(v) => handleDataChange('priceType', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="MARKET">MARKET</SelectItem>
+                    <SelectItem value="LIMIT">LIMIT</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Supported exchanges: NSE, BSE, NFO, BFO, CDS, BCD, MCX
+              </p>
+            </>
+          )}
+
+          {/* ===== SPLIT ORDER NODE ===== */}
+          {nodeType === 'splitOrder' && (
+            <>
+              <div className="space-y-2">
+                <Label>Symbol</Label>
+                <Input
+                  placeholder="e.g., RELIANCE"
+                  value={(nodeData.symbol as string) || ''}
+                  onChange={(e) => handleDataChange('symbol', e.target.value.toUpperCase())}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Exchange</Label>
+                <Select
+                  value={(nodeData.exchange as string) || 'NSE'}
+                  onValueChange={(v) => handleDataChange('exchange', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EXCHANGES.map((ex) => (
+                      <SelectItem key={ex.value} value={ex.value}>
+                        {ex.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Action</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {ORDER_ACTIONS.map((action) => (
+                    <button
+                      key={action.value}
+                      type="button"
+                      onClick={() => handleDataChange('action', action.value)}
+                      className={cn(
+                        'rounded-lg border py-2 text-sm font-semibold transition-colors',
+                        nodeData.action === action.value
+                          ? action.value === 'BUY'
+                            ? 'badge-buy'
+                            : 'badge-sell'
+                          : 'border-border bg-muted text-muted-foreground hover:bg-accent'
+                      )}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Total Quantity</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={(nodeData.quantity as number) || 100}
+                  onChange={(e) => handleDataChange('quantity', parseInt(e.target.value) || 100)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Split Size</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={(nodeData.splitSize as number) || 10}
+                  onChange={(e) => handleDataChange('splitSize', parseInt(e.target.value) || 10)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Product</Label>
+                <Select
+                  value={(nodeData.product as string) || 'MIS'}
+                  onValueChange={(v) => handleDataChange('product', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRODUCT_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Will split into {Math.ceil(((nodeData.quantity as number) || 100) / ((nodeData.splitSize as number) || 10))} orders
+              </p>
+            </>
+          )}
+
+          {/* ===== MULTI QUOTES NODE ===== */}
+          {nodeType === 'multiQuotes' && (
+            <>
+              <div className="space-y-2">
+                <Label>Symbols (comma separated)</Label>
+                <Input
+                  placeholder="e.g., RELIANCE,INFY,TCS"
+                  value={(nodeData.symbols as string) || ''}
+                  onChange={(e) => handleDataChange('symbols', e.target.value.toUpperCase())}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Exchange</Label>
+                <Select
+                  value={(nodeData.exchange as string) || 'NSE'}
+                  onValueChange={(v) => handleDataChange('exchange', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EXCHANGES.map((ex) => (
+                      <SelectItem key={ex.value} value={ex.value}>
+                        {ex.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., quotes"
+                  value={(nodeData.outputVariable as string) || 'quotes'}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Fetches quotes for multiple symbols at once
+              </p>
+            </>
+          )}
+
           {/* ===== TELEGRAM ALERT NODE ===== */}
           {nodeType === 'telegramAlert' && (
             <>

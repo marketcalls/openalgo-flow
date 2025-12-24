@@ -33,6 +33,7 @@ import { HistoryNode } from './HistoryNode'
 import { OpenPositionNode } from './OpenPositionNode'
 import { ExpiryNode } from './ExpiryNode'
 import { IntervalsNode } from './IntervalsNode'
+import { MultiQuotesNode } from './MultiQuotesNode'
 
 // Utility Nodes
 import { TelegramAlertNode } from './TelegramAlertNode'
@@ -73,6 +74,7 @@ export {
   OpenPositionNode,
   ExpiryNode,
   IntervalsNode,
+  MultiQuotesNode,
   // Utilities
   TelegramAlertNode,
   DelayNode,
@@ -116,6 +118,7 @@ export const nodeTypes = {
   openPosition: OpenPositionNode,
   expiry: ExpiryNode,
   intervals: IntervalsNode,
+  multiQuotes: MultiQuotesNode,
 
   // Utilities
   telegramAlert: TelegramAlertNode,

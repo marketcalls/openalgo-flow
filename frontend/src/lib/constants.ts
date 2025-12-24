@@ -3,21 +3,20 @@
 // =============================================================================
 
 export const EXCHANGES = [
-  { value: 'NSE', label: 'NSE Equity', description: 'National Stock Exchange Equity' },
-  { value: 'NFO', label: 'NSE F&O', description: 'NSE Futures & Options' },
-  { value: 'CDS', label: 'NSE Currency', description: 'NSE Currency Derivatives' },
-  { value: 'BSE', label: 'BSE Equity', description: 'Bombay Stock Exchange Equity' },
-  { value: 'BFO', label: 'BSE F&O', description: 'BSE Futures & Options' },
-  { value: 'BCD', label: 'BSE Currency', description: 'BSE Currency Derivatives' },
-  { value: 'MCX', label: 'MCX Commodity', description: 'Multi Commodity Exchange' },
-  { value: 'NCDEX', label: 'NCDEX', description: 'NCDEX Commodity' },
-  { value: 'NSE_INDEX', label: 'NSE Index', description: 'NSE Indices' },
-  { value: 'BSE_INDEX', label: 'BSE Index', description: 'BSE Indices' },
+  { value: 'NSE', label: 'NSE' },
+  { value: 'BSE', label: 'BSE' },
+  { value: 'NFO', label: 'NFO' },
+  { value: 'BFO', label: 'BFO' },
+  { value: 'CDS', label: 'CDS' },
+  { value: 'BCD', label: 'BCD' },
+  { value: 'MCX', label: 'MCX' },
+  { value: 'NSE_INDEX', label: 'NSE_INDEX' },
+  { value: 'BSE_INDEX', label: 'BSE_INDEX' },
 ] as const
 
 export const INDEX_EXCHANGES = [
-  { value: 'NSE_INDEX', label: 'NSE Index', description: 'For NIFTY, BANKNIFTY, etc.' },
-  { value: 'BSE_INDEX', label: 'BSE Index', description: 'For SENSEX, BANKEX, etc.' },
+  { value: 'NSE_INDEX', label: 'NSE_INDEX' },
+  { value: 'BSE_INDEX', label: 'BSE_INDEX' },
 ] as const
 
 // =============================================================================
