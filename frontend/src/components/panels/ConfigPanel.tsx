@@ -593,6 +593,18 @@ export function ConfigPanel() {
                   />
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., orderResult"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Store order response in variable. Access via: {`{{orderResult.orderid}}`}
+                </p>
+              </div>
             </>
           )}
 
@@ -766,6 +778,18 @@ export function ConfigPanel() {
                   />
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., optionOrder"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Store order response. Access: {`{{optionOrder.orderid}}`}
+                </p>
+              </div>
             </>
           )}
 
@@ -999,6 +1023,18 @@ export function ConfigPanel() {
                   </Select>
                 </div>
               )}
+
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., multiLegOrder"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Store order response. Access: {`{{multiLegOrder.orderid}}`}
+                </p>
+              </div>
             </>
           )}
 
@@ -1054,6 +1090,17 @@ export function ConfigPanel() {
                     <SelectItem value="LIMIT">LIMIT</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., basketResult"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Store basket response. Access: {`{{basketResult.orders}}`}
+                </p>
               </div>
               <p className="text-xs text-muted-foreground">
                 Supported exchanges: NSE, BSE, NFO, BFO, CDS, BCD, MCX
@@ -1148,6 +1195,17 @@ export function ConfigPanel() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., splitResult"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Store split order results. Access: {`{{splitResult.orders}}`}
+                </p>
+              </div>
               <p className="text-xs text-muted-foreground">
                 Will split into {Math.ceil(((nodeData.quantity as number) || 100) / ((nodeData.splitSize as number) || 10))} orders
               </p>
@@ -1202,11 +1260,21 @@ export function ConfigPanel() {
             <>
               <div className="space-y-2">
                 <Label>Message</Label>
-                <Input
-                  placeholder="Alert message"
+                <textarea
+                  className="min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  placeholder="Order placed for {{orderResult.symbol}} at {{quote.ltp}}"
                   value={(nodeData.message as string) || ''}
                   onChange={(e) => handleDataChange('message', e.target.value)}
                 />
+              </div>
+              <div className="rounded-lg border border-border bg-muted/30 p-2">
+                <p className="text-[10px] font-medium mb-1">Variable Examples:</p>
+                <div className="space-y-0.5 text-[9px] font-mono text-muted-foreground">
+                  <p>{`{{orderResult.orderid}}`} - Order ID</p>
+                  <p>{`{{quote.ltp}}`} - Last traded price</p>
+                  <p>{`{{position.pnl}}`} - Position P&L</p>
+                  <p>{`{{timestamp}}`} - Current timestamp</p>
+                </div>
               </div>
             </>
           )}
@@ -1259,6 +1327,17 @@ export function ConfigPanel() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., quote"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Access: {`{{quote.ltp}}`}, {`{{quote.open}}`}, {`{{quote.high}}`}, {`{{quote.low}}`}
+                </p>
+              </div>
             </>
           )}
 
@@ -1290,6 +1369,17 @@ export function ConfigPanel() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., depth"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Access: {`{{depth.buy[0].price}}`}, {`{{depth.sell[0].price}}`}
+                </p>
               </div>
             </>
           )}
@@ -1340,6 +1430,17 @@ export function ConfigPanel() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., position"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Access: {`{{position.quantity}}`}, {`{{position.pnl}}`}
+                </p>
               </div>
             </>
           )}
@@ -1402,6 +1503,17 @@ export function ConfigPanel() {
                   onChange={(e) => handleDataChange('days', parseInt(e.target.value) || 30)}
                 />
               </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., ohlcv"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Access: {`{{ohlcv[0].close}}`}, {`{{ohlcv.length}}`}
+                </p>
+              </div>
             </>
           )}
 
@@ -1432,6 +1544,17 @@ export function ConfigPanel() {
                     <SelectItem value="CDS">CDS</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Output Variable</Label>
+                <Input
+                  placeholder="e.g., expiries"
+                  value={(nodeData.outputVariable as string) || ''}
+                  onChange={(e) => handleDataChange('outputVariable', e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  Access: {`{{expiries[0]}}`} for nearest expiry
+                </p>
               </div>
             </>
           )}
