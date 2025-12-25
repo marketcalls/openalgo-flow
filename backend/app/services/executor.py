@@ -892,56 +892,140 @@ class NodeExecutor:
         return result
 
     # ===== WEBSOCKET STREAMING NODES =====
+    # Note: WebSocket streaming is async/continuous. For workflow execution,
+    # these nodes fetch the current/latest data from the stream.
+    # For true real-time streaming, use the REST API quotes() as fallback.
+
     def execute_subscribe_ltp(self, node_data: dict) -> dict:
-        """Execute Subscribe LTP node - subscribe to real-time LTP streaming"""
+        """Execute Subscribe LTP node - get real-time LTP data
+
+        Since workflow execution is sequential, we fetch the current LTP
+        via the quotes API which provides real-time data.
+        """
         symbol = self.get_str(node_data, "symbol", "")
         exchange = self.get_str(node_data, "exchange", "NSE")
         self.log(f"Subscribing to LTP stream: {symbol} ({exchange})")
-        # Note: WebSocket subscription is handled by the websocket_client service
-        # This node sets up the subscription parameters
-        result = {
-            "status": "subscribed",
-            "type": "ltp",
-            "symbol": symbol,
-            "exchange": exchange
-        }
+
+        try:
+            # Use quotes API to get real-time LTP
+            quote_data = self.client.get_quotes(symbol=symbol, exchange=exchange)
+            ltp = quote_data.get("data", {}).get("ltp", 0)
+
+            result = {
+                "status": "success",
+                "type": "ltp",
+                "symbol": symbol,
+                "exchange": exchange,
+                "ltp": ltp,
+                "data": quote_data.get("data", {})
+            }
+
+            # Store LTP directly for easy access via {{ltp}} or {{outputVar}}
+            output_var = node_data.get("outputVariable", "ltp")
+            self.context.set_variable(output_var, ltp)
+            self.log(f"LTP for {symbol}: {ltp}")
+
+        except Exception as e:
+            self.log(f"Failed to get LTP: {e}", "error")
+            result = {
+                "status": "error",
+                "type": "ltp",
+                "symbol": symbol,
+                "exchange": exchange,
+                "error": str(e)
+            }
+
         self.store_output(node_data, result)
         return result
 
     def execute_subscribe_quote(self, node_data: dict) -> dict:
-        """Execute Subscribe Quote node - subscribe to real-time quote streaming"""
+        """Execute Subscribe Quote node - get real-time quote data (OHLC + volume)"""
         symbol = self.get_str(node_data, "symbol", "")
         exchange = self.get_str(node_data, "exchange", "NSE")
         self.log(f"Subscribing to Quote stream: {symbol} ({exchange})")
-        result = {
-            "status": "subscribed",
-            "type": "quote",
-            "symbol": symbol,
-            "exchange": exchange
-        }
+
+        try:
+            # Use quotes API to get real-time quote data
+            quote_data = self.client.get_quotes(symbol=symbol, exchange=exchange)
+            data = quote_data.get("data", {})
+
+            result = {
+                "status": "success",
+                "type": "quote",
+                "symbol": symbol,
+                "exchange": exchange,
+                "ltp": data.get("ltp", 0),
+                "open": data.get("open", 0),
+                "high": data.get("high", 0),
+                "low": data.get("low", 0),
+                "volume": data.get("volume", 0),
+                "bid": data.get("bid", 0),
+                "ask": data.get("ask", 0),
+                "prev_close": data.get("prev_close", 0),
+                "data": data
+            }
+
+            self.log(f"Quote for {symbol}: LTP={data.get('ltp', 0)}")
+
+        except Exception as e:
+            self.log(f"Failed to get Quote: {e}", "error")
+            result = {
+                "status": "error",
+                "type": "quote",
+                "symbol": symbol,
+                "exchange": exchange,
+                "error": str(e)
+            }
+
         self.store_output(node_data, result)
         return result
 
     def execute_subscribe_depth(self, node_data: dict) -> dict:
-        """Execute Subscribe Depth node - subscribe to real-time depth streaming"""
+        """Execute Subscribe Depth node - get real-time depth data (order book)"""
         symbol = self.get_str(node_data, "symbol", "")
         exchange = self.get_str(node_data, "exchange", "NSE")
         self.log(f"Subscribing to Depth stream: {symbol} ({exchange})")
-        result = {
-            "status": "subscribed",
-            "type": "depth",
-            "symbol": symbol,
-            "exchange": exchange
-        }
+
+        try:
+            # Use depth API to get real-time order book
+            depth_data = self.client.get_depth(symbol=symbol, exchange=exchange)
+            data = depth_data.get("data", {})
+
+            result = {
+                "status": "success",
+                "type": "depth",
+                "symbol": symbol,
+                "exchange": exchange,
+                "bids": data.get("bids", []),
+                "asks": data.get("asks", []),
+                "totalbuyqty": data.get("totalbuyqty", 0),
+                "totalsellqty": data.get("totalsellqty", 0),
+                "ltp": data.get("ltp", 0),
+                "data": data
+            }
+
+            self.log(f"Depth for {symbol}: {len(data.get('bids', []))} bids, {len(data.get('asks', []))} asks")
+
+        except Exception as e:
+            self.log(f"Failed to get Depth: {e}", "error")
+            result = {
+                "status": "error",
+                "type": "depth",
+                "symbol": symbol,
+                "exchange": exchange,
+                "error": str(e)
+            }
+
         self.store_output(node_data, result)
         return result
 
     def execute_unsubscribe(self, node_data: dict) -> dict:
-        """Execute Unsubscribe node - stop streaming"""
+        """Execute Unsubscribe node - cleanup (no-op for REST-based approach)"""
         symbol = self.get_str(node_data, "symbol", "")
         exchange = self.get_str(node_data, "exchange", "NSE")
         stream_type = self.get_str(node_data, "streamType", "all")
         self.log(f"Unsubscribing from {stream_type} stream: {symbol or 'all'} ({exchange})")
+
         result = {
             "status": "unsubscribed",
             "type": stream_type,
