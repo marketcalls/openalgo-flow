@@ -226,7 +226,10 @@ class NodeExecutor:
         return result
 
     def execute_options_multi_order(self, node_data: dict) -> dict:
-        """Execute Multi-Leg Options Order node"""
+        """Execute Multi-Leg Options Order node
+
+        Note: product and pricetype are specified per-leg in the legs array.
+        """
         underlying = node_data.get("underlying", "NIFTY")
         strategy = node_data.get("strategy", "straddle")
         action = node_data.get("action", "SELL")
@@ -263,20 +266,18 @@ class NodeExecutor:
 
         self.log(f"Resolved expiry: {expiry_type} -> {expiry_date}")
 
-        # Build legs based on strategy
-        legs = self._build_strategy_legs(strategy, action, total_quantity)
+        # Build legs based on strategy (includes product, pricetype, expiry_date per leg)
+        legs = self._build_strategy_legs(strategy, action, total_quantity, expiry_date, product, price_type)
         if not legs:
             return {"status": "error", "message": f"Unknown strategy: {strategy}"}
 
-        self.log(f"Strategy legs: {legs}")
+        self.log(f"Strategy legs: {json.dumps(legs, indent=2)}")
 
+        # expiry_date, product, pricetype are now included in each leg
         result = self.client.options_multi_order(
             underlying=underlying,
             exchange=underlying_exchange,
             legs=legs,
-            expiry_date=expiry_date,
-            product=product,
-            price_type=price_type,
         )
         self.log(
             f"Multi-leg order result: {result}",
@@ -356,86 +357,108 @@ class NodeExecutor:
         # Remove dashes and uppercase
         return expiry_str.replace("-", "").upper()
 
-    def _build_strategy_legs(self, strategy: str, action: str, quantity: int) -> List[Dict[str, Any]]:
-        """Build legs array based on strategy type"""
-        # For short strategies (SELL), we sell. For long (BUY), we buy.
+    def _build_strategy_legs(
+        self,
+        strategy: str,
+        action: str,
+        quantity: int,
+        expiry_date: str,
+        product: str = "NRML",
+        pricetype: str = "MARKET"
+    ) -> List[Dict[str, Any]]:
+        """Build legs array based on strategy type
+
+        Each leg includes: offset, option_type, action, quantity, expiry_date, product, pricetype
+        """
         buy_action = "BUY"
         sell_action = "SELL"
+
+        def make_leg(offset: str, option_type: str, leg_action: str) -> Dict[str, Any]:
+            return {
+                "offset": offset,
+                "option_type": option_type,
+                "action": leg_action,
+                "quantity": quantity,
+                "expiry_date": expiry_date,
+                "product": product,
+                "pricetype": pricetype,
+                "splitsize": 0
+            }
 
         if strategy == "straddle":
             # ATM CE + ATM PE (same action)
             return [
-                {"offset": "ATM", "option_type": "CE", "action": action, "quantity": quantity},
-                {"offset": "ATM", "option_type": "PE", "action": action, "quantity": quantity},
+                make_leg("ATM", "CE", action),
+                make_leg("ATM", "PE", action),
             ]
 
         elif strategy == "strangle":
             # OTM CE + OTM PE (same action)
             return [
-                {"offset": "OTM2", "option_type": "CE", "action": action, "quantity": quantity},
-                {"offset": "OTM2", "option_type": "PE", "action": action, "quantity": quantity},
+                make_leg("OTM2", "CE", action),
+                make_leg("OTM2", "PE", action),
             ]
 
         elif strategy == "iron_condor":
             # Sell OTM CE + Sell OTM PE + Buy further OTM CE + Buy further OTM PE
             if action == "SELL":
                 return [
-                    {"offset": "OTM4", "option_type": "CE", "action": sell_action, "quantity": quantity},
-                    {"offset": "OTM4", "option_type": "PE", "action": sell_action, "quantity": quantity},
-                    {"offset": "OTM6", "option_type": "CE", "action": buy_action, "quantity": quantity},
-                    {"offset": "OTM6", "option_type": "PE", "action": buy_action, "quantity": quantity},
+                    make_leg("OTM5", "CE", sell_action),
+                    make_leg("OTM5", "PE", sell_action),
+                    make_leg("OTM10", "CE", buy_action),
+                    make_leg("OTM10", "PE", buy_action),
                 ]
             else:
                 return [
-                    {"offset": "OTM4", "option_type": "CE", "action": buy_action, "quantity": quantity},
-                    {"offset": "OTM4", "option_type": "PE", "action": buy_action, "quantity": quantity},
-                    {"offset": "OTM6", "option_type": "CE", "action": sell_action, "quantity": quantity},
-                    {"offset": "OTM6", "option_type": "PE", "action": sell_action, "quantity": quantity},
+                    make_leg("OTM5", "CE", buy_action),
+                    make_leg("OTM5", "PE", buy_action),
+                    make_leg("OTM10", "CE", sell_action),
+                    make_leg("OTM10", "PE", sell_action),
                 ]
 
         elif strategy == "iron_butterfly":
             # Sell ATM CE + Sell ATM PE + Buy OTM CE + Buy OTM PE
             if action == "SELL":
                 return [
-                    {"offset": "ATM", "option_type": "CE", "action": sell_action, "quantity": quantity},
-                    {"offset": "ATM", "option_type": "PE", "action": sell_action, "quantity": quantity},
-                    {"offset": "OTM3", "option_type": "CE", "action": buy_action, "quantity": quantity},
-                    {"offset": "OTM3", "option_type": "PE", "action": buy_action, "quantity": quantity},
+                    make_leg("ATM", "CE", sell_action),
+                    make_leg("ATM", "PE", sell_action),
+                    make_leg("OTM3", "CE", buy_action),
+                    make_leg("OTM3", "PE", buy_action),
                 ]
             else:
                 return [
-                    {"offset": "ATM", "option_type": "CE", "action": buy_action, "quantity": quantity},
-                    {"offset": "ATM", "option_type": "PE", "action": buy_action, "quantity": quantity},
-                    {"offset": "OTM3", "option_type": "CE", "action": sell_action, "quantity": quantity},
-                    {"offset": "OTM3", "option_type": "PE", "action": sell_action, "quantity": quantity},
+                    make_leg("ATM", "CE", buy_action),
+                    make_leg("ATM", "PE", buy_action),
+                    make_leg("OTM3", "CE", sell_action),
+                    make_leg("OTM3", "PE", sell_action),
                 ]
 
         elif strategy == "bull_call_spread":
             # Buy lower strike CE + Sell higher strike CE
             return [
-                {"offset": "ATM", "option_type": "CE", "action": buy_action, "quantity": quantity},
-                {"offset": "OTM2", "option_type": "CE", "action": sell_action, "quantity": quantity},
+                make_leg("ATM", "CE", buy_action),
+                make_leg("OTM3", "CE", sell_action),
             ]
 
         elif strategy == "bear_put_spread":
             # Buy higher strike PE + Sell lower strike PE
             return [
-                {"offset": "ATM", "option_type": "PE", "action": buy_action, "quantity": quantity},
-                {"offset": "OTM2", "option_type": "PE", "action": sell_action, "quantity": quantity},
+                make_leg("ATM", "PE", buy_action),
+                make_leg("OTM3", "PE", sell_action),
             ]
 
         elif strategy == "bull_put_spread":
             # Sell higher strike PE + Buy lower strike PE
             return [
-                {"offset": "ATM", "option_type": "PE", "action": sell_action, "quantity": quantity},
-                {"offset": "OTM2", "option_type": "PE", "action": buy_action, "quantity": quantity},
+                make_leg("ATM", "PE", sell_action),
+                make_leg("OTM3", "PE", buy_action),
             ]
 
         elif strategy == "bear_call_spread":
             # Sell lower strike CE + Buy higher strike CE
             return [
-                {"offset": "ATM", "option_type": "CE", "action": sell_action, "quantity": quantity},
-                {"offset": "OTM2", "option_type": "CE", "action": buy_action, "quantity": quantity},
+                make_leg("ATM", "CE", sell_action),
+                make_leg("OTM3", "CE", buy_action),
             ]
 
         return []
@@ -622,13 +645,75 @@ class NodeExecutor:
 
     def execute_delay(self, node_data: dict) -> dict:
         """Execute Delay node"""
-        delay_ms = int(node_data.get("delay", 1000))
+        delay_ms = int(node_data.get("delayMs", 1000))
         self.log(f"Waiting for {delay_ms}ms")
-        import time
+        import time as time_module
 
-        time.sleep(delay_ms / 1000)
+        time_module.sleep(delay_ms / 1000)
         self.log(f"Delay complete")
         return {"status": "success", "message": f"Waited {delay_ms}ms"}
+
+    def execute_wait_until(self, node_data: dict) -> dict:
+        """Execute Wait Until node - pauses until target time is reached
+
+        Used for time-based entry/exit strategies like BuildAlgos.
+        """
+        import time as time_module
+
+        target_time_str = node_data.get("targetTime", "09:30")
+        check_interval_ms = int(node_data.get("checkIntervalMs", 1000))
+
+        target_parts = target_time_str.split(":")
+        target_hour = int(target_parts[0])
+        target_minute = int(target_parts[1]) if len(target_parts) > 1 else 0
+        target_second = int(target_parts[2]) if len(target_parts) > 2 else 0
+        target_time = time(target_hour, target_minute, target_second)
+
+        now = datetime.now().time()
+        now_seconds = now.hour * 3600 + now.minute * 60 + now.second
+        target_seconds = target_time.hour * 3600 + target_time.minute * 60 + target_time.second
+
+        # If target time has already passed today, continue immediately
+        if now_seconds >= target_seconds:
+            self.log(
+                f"Wait Until: Target time {target_time_str} has already passed (current: {now.strftime('%H:%M:%S')}), continuing..."
+            )
+            return {
+                "status": "success",
+                "message": f"Target time {target_time_str} already passed",
+                "current_time": now.strftime("%H:%M:%S"),
+                "target_time": target_time_str,
+                "waited": False,
+            }
+
+        # Calculate wait duration
+        wait_seconds = target_seconds - now_seconds
+        self.log(
+            f"Wait Until: Waiting for {target_time_str} (current: {now.strftime('%H:%M:%S')}, ~{wait_seconds}s remaining)"
+        )
+
+        # Wait in intervals, checking time periodically
+        check_interval_sec = check_interval_ms / 1000
+        while True:
+            now = datetime.now().time()
+            now_seconds = now.hour * 3600 + now.minute * 60 + now.second
+
+            if now_seconds >= target_seconds:
+                break
+
+            # Sleep for the check interval or remaining time, whichever is smaller
+            remaining = target_seconds - now_seconds
+            sleep_time = min(check_interval_sec, remaining)
+            time_module.sleep(sleep_time)
+
+        self.log(f"Wait Until: Target time {target_time_str} reached!")
+        return {
+            "status": "success",
+            "message": f"Waited until {target_time_str}",
+            "current_time": datetime.now().strftime("%H:%M:%S"),
+            "target_time": target_time_str,
+            "waited": True,
+        }
 
     def execute_log(self, node_data: dict) -> dict:
         """Execute Log node"""
@@ -734,6 +819,56 @@ class NodeExecutor:
             "status": "success",
             "condition": condition_met,
             "current_time": now.strftime("%H:%M:%S"),
+        }
+
+    def execute_time_condition(self, node_data: dict) -> dict:
+        """Execute Time Condition node - returns True/False for condition
+
+        Used for Entry/Exit time conditions like BuildAlgos:
+        - Check if current time equals, passes, or is before a specific time
+        """
+        target_time_str = node_data.get("targetTime", "09:30")
+        operator = node_data.get("operator", ">=")
+        condition_type = node_data.get("conditionType", "entry")
+
+        now = datetime.now().time()
+        target_parts = target_time_str.split(":")
+
+        # Support both HH:MM and HH:MM:SS formats
+        target_hour = int(target_parts[0])
+        target_minute = int(target_parts[1]) if len(target_parts) > 1 else 0
+        target_second = int(target_parts[2]) if len(target_parts) > 2 else 0
+        target_time = time(target_hour, target_minute, target_second)
+
+        # Convert times to comparable values (seconds since midnight)
+        now_seconds = now.hour * 3600 + now.minute * 60 + now.second
+        target_seconds = target_time.hour * 3600 + target_time.minute * 60 + target_time.second
+
+        # Evaluate condition based on operator
+        condition_met = False
+        if operator == "==":
+            # Check if current time matches (within same minute)
+            condition_met = (now.hour == target_time.hour and
+                           now.minute == target_time.minute)
+        elif operator == ">=":
+            condition_met = now_seconds >= target_seconds
+        elif operator == "<=":
+            condition_met = now_seconds <= target_seconds
+        elif operator == ">":
+            condition_met = now_seconds > target_seconds
+        elif operator == "<":
+            condition_met = now_seconds < target_seconds
+
+        self.log(
+            f"Time condition ({condition_type}): current={now.strftime('%H:%M:%S')} {operator} target={target_time_str} = {condition_met}"
+        )
+        return {
+            "status": "success",
+            "condition": condition_met,
+            "condition_type": condition_type,
+            "current_time": now.strftime("%H:%M:%S"),
+            "target_time": target_time_str,
+            "operator": operator,
         }
 
     def _evaluate_condition(
@@ -888,6 +1023,8 @@ async def execute_node_chain(
         result = executor.execute_telegram_alert(node_data)
     elif node_type == "delay":
         result = executor.execute_delay(node_data)
+    elif node_type == "waitUntil":
+        result = executor.execute_wait_until(node_data)
     elif node_type == "log":
         result = executor.execute_log(node_data)
     elif node_type == "variable":
@@ -900,6 +1037,8 @@ async def execute_node_chain(
         result = executor.execute_price_condition(node_data)
     elif node_type == "timeWindow":
         result = executor.execute_time_window(node_data)
+    elif node_type == "timeCondition":
+        result = executor.execute_time_condition(node_data)
     elif node_type == "priceAlert":
         # Price alert is a trigger, just pass through
         executor.log("Price alert triggered")

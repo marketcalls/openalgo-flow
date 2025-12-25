@@ -476,6 +476,11 @@ export const DEFAULT_NODE_DATA = {
     startTime: '09:15',
     endTime: '15:30',
   },
+  timeCondition: {
+    conditionType: 'entry' as const,
+    targetTime: '09:30',
+    operator: '>=' as const,
+  },
   getQuote: {
     symbol: '',
     exchange: 'NSE',
@@ -487,6 +492,9 @@ export const DEFAULT_NODE_DATA = {
   },
   delay: {
     delayMs: 1000,
+  },
+  waitUntil: {
+    targetTime: '09:30',
   },
   log: {
     message: 'Log message here',

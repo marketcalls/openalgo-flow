@@ -23,6 +23,7 @@ import { SplitOrderNode } from './SplitOrderNode'
 import { PositionCheckNode } from './PositionCheckNode'
 import { FundCheckNode } from './FundCheckNode'
 import { TimeWindowNode } from './TimeWindowNode'
+import { TimeConditionNode } from './TimeConditionNode'
 import { PriceConditionNode } from './PriceConditionNode'
 
 // Data Nodes
@@ -38,6 +39,7 @@ import { MultiQuotesNode } from './MultiQuotesNode'
 // Utility Nodes
 import { TelegramAlertNode } from './TelegramAlertNode'
 import { DelayNode } from './DelayNode'
+import { WaitUntilNode } from './WaitUntilNode'
 import { GroupNode } from './GroupNode'
 import { VariableNode } from './VariableNode'
 import { LogNode } from './LogNode'
@@ -65,6 +67,7 @@ export {
   PositionCheckNode,
   FundCheckNode,
   TimeWindowNode,
+  TimeConditionNode,
   PriceConditionNode,
   // Data
   GetQuoteNode,
@@ -78,6 +81,7 @@ export {
   // Utilities
   TelegramAlertNode,
   DelayNode,
+  WaitUntilNode,
   GroupNode,
   VariableNode,
   LogNode,
@@ -108,6 +112,7 @@ export const nodeTypes = {
   positionCheck: PositionCheckNode,
   fundCheck: FundCheckNode,
   timeWindow: TimeWindowNode,
+  timeCondition: TimeConditionNode,
   priceCondition: PriceConditionNode,
 
   // Data
@@ -123,6 +128,7 @@ export const nodeTypes = {
   // Utilities
   telegramAlert: TelegramAlertNode,
   delay: DelayNode,
+  waitUntil: WaitUntilNode,
   group: GroupNode,
   variable: VariableNode,
   log: LogNode,

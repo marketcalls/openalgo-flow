@@ -105,23 +105,19 @@ class OpenAlgoClient:
         underlying: str,
         exchange: str,
         legs: List[Dict[str, Any]],
-        expiry_date: Optional[str] = None,
-        product: str = "NRML",
-        price_type: str = "MARKET",
         strategy: str = "OpenAlgoFlow"
     ) -> dict:
-        """Place multi-leg options order using SDK"""
-        kwargs = {
-            "strategy": strategy,
-            "underlying": underlying,
-            "exchange": exchange,
-            "legs": legs,
-            "product": product,
-            "pricetype": price_type
-        }
-        if expiry_date:
-            kwargs["expiry_date"] = expiry_date
-        return self.client.optionsmultiorder(**kwargs)
+        """Place multi-leg options order using SDK
+
+        Each leg should contain: offset, option_type, action, quantity, expiry_date,
+        and optionally: product, pricetype, splitsize
+        """
+        return self.client.optionsmultiorder(
+            strategy=strategy,
+            underlying=underlying,
+            exchange=exchange,
+            legs=legs,
+        )
 
     def basket_order(
         self,

@@ -10,6 +10,7 @@ import {
   Send,
   Bell,
   Timer,
+  Hourglass,
   Layers,
   Package,
   Split,
@@ -160,6 +161,13 @@ export function NodePalette({ onDragStart }: NodePaletteProps) {
 
   const conditions = [
     {
+      type: 'timeCondition',
+      label: 'Time Condition',
+      description: 'Entry/Exit time',
+      icon: <Clock className="h-3.5 w-3.5 text-node-condition" />,
+      color: 'bg-node-condition/10',
+    },
+    {
       type: 'positionCheck',
       label: 'Position Check',
       description: 'Check position',
@@ -269,6 +277,13 @@ export function NodePalette({ onDragStart }: NodePaletteProps) {
       description: 'Wait duration',
       icon: <Timer className="h-3.5 w-3.5 text-muted-foreground" />,
       color: 'bg-muted',
+    },
+    {
+      type: 'waitUntil',
+      label: 'Wait Until',
+      description: 'Wait until time',
+      icon: <Hourglass className="h-3.5 w-3.5 text-amber-500" />,
+      color: 'bg-amber-500/10',
     },
     {
       type: 'group',

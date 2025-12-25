@@ -9,6 +9,7 @@ import {
   Panel,
   useReactFlow,
   type Node,
+  type Edge,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import {
@@ -32,6 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/hooks/use-toast'
 import { nodeTypes } from '@/components/nodes'
+import { edgeTypes } from '@/components/edges'
 import { NodePalette } from '@/components/panels/NodePalette'
 import { ConfigPanel } from '@/components/panels/ConfigPanel'
 import { cn } from '@/lib/utils'
@@ -74,12 +76,18 @@ export function Editor() {
 
   useEffect(() => {
     if (workflow) {
+      // Convert all edges to insertable type for the plus button feature
+      const convertedEdges = workflow.edges.map((edge: Edge) => ({
+        ...edge,
+        type: 'insertable',
+        animated: true,
+      }))
       setWorkflow({
         id: workflow.id,
         name: workflow.name,
         description: workflow.description || '',
         nodes: workflow.nodes as Node[],
-        edges: workflow.edges,
+        edges: convertedEdges,
       })
       setIsActive(workflow.is_active)
       // Set node ID counter
@@ -307,11 +315,12 @@ export function Editor() {
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             fitView
             snapToGrid
             snapGrid={[16, 16]}
             defaultEdgeOptions={{
-              type: 'smoothstep',
+              type: 'insertable',
               animated: true,
             }}
           >

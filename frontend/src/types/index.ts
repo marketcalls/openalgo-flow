@@ -214,6 +214,14 @@ export interface TimeWindowNodeData {
   invertCondition?: boolean
 }
 
+/** Time Condition - Check if time equals/passes specific time (Entry/Exit) */
+export interface TimeConditionNodeData {
+  label?: string
+  conditionType: 'entry' | 'exit' | 'custom'
+  targetTime: string
+  operator: '==' | '>=' | '<=' | '>' | '<'
+}
+
 /** Greeks Condition - Check option greeks */
 export interface GreeksConditionNodeData {
   label?: string
@@ -355,6 +363,13 @@ export interface DelayNodeData {
   delayMs: number
 }
 
+/** Wait Until Node - Pause until specific time */
+export interface WaitUntilNodeData {
+  label?: string
+  targetTime: string
+  checkIntervalMs?: number
+}
+
 /** Log Node - Log message */
 export interface LogNodeData {
   label?: string
@@ -409,6 +424,7 @@ export type ConditionNodeDataTypes =
   | PositionCheckNodeData
   | FundCheckNodeData
   | TimeWindowNodeData
+  | TimeConditionNodeData
   | GreeksConditionNodeData
   | PriceConditionNodeData
 
@@ -431,6 +447,7 @@ export type DataNodeData =
 export type UtilityNodeData =
   | TelegramAlertNodeData
   | DelayNodeData
+  | WaitUntilNodeData
   | LogNodeData
   | VariableNodeData
   | LoopNodeData
@@ -481,6 +498,7 @@ export const NODE_TYPES = {
   POSITION_CHECK: 'positionCheck',
   FUND_CHECK: 'fundCheck',
   TIME_WINDOW: 'timeWindow',
+  TIME_CONDITION: 'timeCondition',
   GREEKS_CONDITION: 'greeksCondition',
   PRICE_CONDITION: 'priceCondition',
   // Data
@@ -499,6 +517,7 @@ export const NODE_TYPES = {
   // Utilities
   TELEGRAM_ALERT: 'telegramAlert',
   DELAY: 'delay',
+  WAIT_UNTIL: 'waitUntil',
   LOG: 'log',
   VARIABLE: 'variable',
   LOOP: 'loop',

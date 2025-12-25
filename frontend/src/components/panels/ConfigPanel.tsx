@@ -128,6 +128,21 @@ const OPTION_STRATEGIES = [
   { value: 'custom', label: 'Custom', description: 'Build your own multi-leg' },
 ]
 
+// Time condition operators
+const TIME_OPERATORS = [
+  { value: '==', label: 'Equals (=)', description: 'Exactly at this time' },
+  { value: '>=', label: 'At or After (>=)', description: 'Time has passed' },
+  { value: '<=', label: 'At or Before (<=)', description: 'Before this time' },
+  { value: '>', label: 'After (>)', description: 'Strictly after' },
+  { value: '<', label: 'Before (<)', description: 'Strictly before' },
+]
+
+const CONDITION_TYPES = [
+  { value: 'entry', label: 'Entry', description: 'Entry condition' },
+  { value: 'exit', label: 'Exit', description: 'Exit condition' },
+  { value: 'custom', label: 'Custom', description: 'Custom condition' },
+]
+
 // Node type to display name mapping
 const NODE_TITLES: Record<string, string> = {
   start: 'Schedule Trigger',
@@ -145,6 +160,7 @@ const NODE_TITLES: Record<string, string> = {
   positionCheck: 'Position Check',
   fundCheck: 'Fund Check',
   timeWindow: 'Time Window',
+  timeCondition: 'Time Condition',
   priceCondition: 'Price Condition',
   getQuote: 'Get Quote',
   getDepth: 'Market Depth',
@@ -155,6 +171,7 @@ const NODE_TITLES: Record<string, string> = {
   intervals: 'Intervals',
   telegramAlert: 'Telegram Alert',
   delay: 'Delay',
+  waitUntil: 'Wait Until',
   variable: 'Variable',
   log: 'Log',
   group: 'Group',
@@ -1309,6 +1326,52 @@ export function ConfigPanel() {
             </>
           )}
 
+          {/* ===== WAIT UNTIL NODE ===== */}
+          {nodeType === 'waitUntil' && (
+            <>
+              <div className="space-y-2">
+                <Label>Target Time</Label>
+                <Input
+                  type="time"
+                  value={(nodeData.targetTime as string) || '09:30'}
+                  onChange={(e) => handleDataChange('targetTime', e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Workflow will pause until this time is reached
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Label (Optional)</Label>
+                <Input
+                  placeholder="e.g., Wait for Entry Time"
+                  value={(nodeData.label as string) || ''}
+                  onChange={(e) => handleDataChange('label', e.target.value)}
+                />
+              </div>
+
+              <div className="rounded-lg border border-border bg-amber-500/5 p-3">
+                <p className="text-xs font-medium mb-2 text-amber-500">How it works:</p>
+                <div className="space-y-1 text-[10px] text-muted-foreground">
+                  <p>The workflow will pause at this node until the specified time.</p>
+                  <p>If the time has already passed today, execution continues immediately.</p>
+                  <p>Use this for time-based entry/exit strategies.</p>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-border bg-muted/30 p-3">
+                <p className="text-xs font-medium mb-2">Example Workflow:</p>
+                <div className="space-y-1 text-[10px] text-muted-foreground font-mono">
+                  <p>Start @ 9:15</p>
+                  <p>  Wait Until 9:30</p>
+                  <p>    Place Straddle</p>
+                  <p>      Wait Until 15:15</p>
+                  <p>        Close Positions</p>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* ===== GET QUOTE NODE ===== */}
           {nodeType === 'getQuote' && (
             <>
@@ -1733,6 +1796,92 @@ export function ConfigPanel() {
                   checked={(nodeData.invertCondition as boolean) || false}
                   onCheckedChange={(v) => handleDataChange('invertCondition', v)}
                 />
+              </div>
+            </>
+          )}
+
+          {/* ===== TIME CONDITION NODE ===== */}
+          {nodeType === 'timeCondition' && (
+            <>
+              <div className="space-y-2">
+                <Label>Condition Type</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {CONDITION_TYPES.map((type) => (
+                    <button
+                      key={type.value}
+                      type="button"
+                      onClick={() => handleDataChange('conditionType', type.value)}
+                      className={cn(
+                        'rounded-lg border py-2 text-sm font-semibold transition-colors',
+                        nodeData.conditionType === type.value
+                          ? type.value === 'entry'
+                            ? 'badge-buy'
+                            : type.value === 'exit'
+                            ? 'badge-sell'
+                            : 'bg-primary text-primary-foreground'
+                          : 'border-border bg-muted text-muted-foreground hover:bg-accent'
+                      )}
+                    >
+                      {type.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Operator</Label>
+                <Select
+                  value={(nodeData.operator as string) || '>='}
+                  onValueChange={(v) => handleDataChange('operator', v)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIME_OPERATORS.map((op) => (
+                      <SelectItem key={op.value} value={op.value}>
+                        <div className="flex flex-col">
+                          <span>{op.label}</span>
+                          <span className="text-xs text-muted-foreground">{op.description}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Target Time</Label>
+                <Input
+                  type="time"
+                  value={(nodeData.targetTime as string) || '09:30'}
+                  onChange={(e) => handleDataChange('targetTime', e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {nodeData.conditionType === 'entry'
+                    ? 'Time when entry should trigger'
+                    : nodeData.conditionType === 'exit'
+                    ? 'Time when exit should trigger'
+                    : 'Time to check against'}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Label (Optional)</Label>
+                <Input
+                  placeholder="e.g., Market Open Entry"
+                  value={(nodeData.label as string) || ''}
+                  onChange={(e) => handleDataChange('label', e.target.value)}
+                />
+              </div>
+
+              <div className="rounded-lg border border-border bg-muted/30 p-3">
+                <p className="text-xs font-medium mb-2">Usage Example:</p>
+                <div className="space-y-1 text-[10px] text-muted-foreground">
+                  <p>Entry at 9:30 AM: Set operator to &gt;= and time to 09:30</p>
+                  <p>Exit at 3:15 PM: Set operator to &gt;= and time to 15:15</p>
+                  <p>Exact time match: Use = operator</p>
+                </div>
               </div>
             </>
           )}
